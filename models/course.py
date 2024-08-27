@@ -22,12 +22,14 @@ if TYPE_CHECKING:
 @dataclass
 class Course:
     """Cours enseigné à l'école :
+    - id                 : clé primaire de l'entité persistante
     - name               : nom du cours
     - start_date         : date de début
     - end_date           : date de fin
     - teacher            : enseignant de ce cours
     - students_taking_it : élèves qui suivent ce cours
     """
+    id: Optional[int] = field(default=None, init=False)
     name: str
     start_date: date
     end_date: date

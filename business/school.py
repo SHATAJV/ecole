@@ -5,6 +5,8 @@ Classe School
 """
 
 from dataclasses import dataclass, field
+
+from daos.course_dao import CourseDao
 from models.course import Course
 from models.teacher import Teacher
 from models.student import Student
@@ -43,3 +45,8 @@ class School:
             for student in course.students_taking_it:
                 print(f"- {student}")
             print()
+
+    @staticmethod
+    def get_course_by_id(id_course: int):
+        course_dao: CourseDao = CourseDao()
+        return course_dao.read(id_course)

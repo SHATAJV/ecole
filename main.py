@@ -7,7 +7,7 @@ Application de gestion d'une école
 
 from datetime import date
 
-from models.address import Address
+from models.adress import Adress
 from models.course import Course
 from models.teacher import Teacher
 from models.student import Student
@@ -21,9 +21,9 @@ def init_school(school: School) -> None:
     valerie: Student = Student('Valérie', 'Dumont', 13)
     louis: Student   = Student('Louis', 'Berthot', 11)
 
-    paul.address    = Address('12 rue des Pinsons', 'Castanet', 31320)
-    valerie.address = Address('43 avenue Jean Zay', 'Toulouse', 31200)
-    louis.address   = Address('7 impasse des Coteaux', 'Cornebarrieu', 31150)
+    paul.adress    = Adress('12 rue des Pinsons', 'Castanet', 31320)
+    valerie.adress = Adress('43 avenue Jean Zay', 'Toulouse', 31200)
+    louis.adress   = Adress('7 impasse des Coteaux', 'Cornebarrieu', 31150)
 
     # ajout de ceux-ci à l'école
     for student in [paul, valerie, louis]:
@@ -104,6 +104,10 @@ Bienvenue dans notre école
 
     # affichage de la liste des cours, leur enseignant et leurs élèves
     school.display_courses_list()
+
+    print(school.get_course_by_id(1))
+    print(school.get_course_by_id(2))
+    print(school.get_course_by_id(3))
 
 
 if __name__ == '__main__':
