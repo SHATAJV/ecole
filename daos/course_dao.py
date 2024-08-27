@@ -40,8 +40,12 @@ class CourseDao(Dao[Course]):
         :param course: cours déjà mis à jour en mémoire
         :return: True si la mise à jour a pu être réalisée
         """
-        ...
-        return True
+        with Dao.connection.cursor() as cursor:
+            sql = "UPDATE course SET name=%s, start_date=%s, end_date=%s, id_teacher=%s WHERE id_course=%s"
+
+            cursor.execute(sql, (course.name, course.start_date, course.end_date, course.id_teacher, course.id_course))
+            Dao.connection.commit()
+            return cursor.rowcount > 0
 
     def delete(self, course: Course) -> bool:
         """Supprime en BD l'entité Course correspondant à course
@@ -49,8 +53,13 @@ class CourseDao(Dao[Course]):
         :param course: cours dont l'entité Course correspondante est à supprimer
         :return: True si la suppression a pu être réalisée
         """
-        ...
-        return True
+        with Dao.connection.cursor() as cursor:
+            sql = "DELETE FROM course WHERE id_course=%s"
+            cursor.execute(sql, (course.id_course,))
+            Dao.connection.commit()
+            return cursor.rowcount > 0
+
+
 
 
 
