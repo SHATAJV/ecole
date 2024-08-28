@@ -1,10 +1,11 @@
 from datetime import date
-from models.adress import Adress
+from models.adress import Address
 from models.course import Course
 from models.teacher import Teacher
 from models.student import Student
 from business.school import School
 from services.course_service import CourseService
+from daos.address_dao import AddressDao
 
 def init_school(school: School) -> None:
     """Initialisation d'un jeu de test pour l'école school."""
@@ -13,9 +14,9 @@ def init_school(school: School) -> None:
     valerie = Student('Valérie', 'Dumont', 13)
     louis = Student('Louis', 'Berthot', 11)
 
-    paul.address = Adress('12 rue des Pinsons', 'Castanet', 31320)  # Correction du nom de la classe
-    valerie.address = Adress('43 avenue Jean Zay', 'Toulouse', 31200)  # Correction du nom de la classe
-    louis.address = Adress('7 impasse des Coteaux', 'Cornebarrieu', 31150)  # Correction du nom de la classe
+    paul.address = Address('12 rue des Pinsons', 'Castanet', 31320)  # Correction du nom de la classe
+    valerie.address = Address('43 avenue Jean Zay', 'Toulouse', 31200)  # Correction du nom de la classe
+    louis.address = Address('7 impasse des Coteaux', 'Cornebarrieu', 31150)  # Correction du nom de la classe
 
     # Ajout des étudiants à l'école
     for student in [paul, valerie, louis]:
@@ -101,6 +102,38 @@ Bienvenue dans notre école
         print(f"New Course ID: {course_id}")
     except Exception as e:
         print(f"An error occurred while adding the course with teacher: {e}")
+
+print("Testing Address DAO Operations")
+
+    # Création d'une instance d'AddressDao
+address_dao = AddressDao()
+
+# Création d'une nouvelle adresse
+address = Address(street="123 Main St", city="Springfield", postal_code=12345)
+address_id = address_dao.create(address)
+print(f"Address created with ID: {address_id}")
+
+# Lecture de l'adresse à partir de la base de données
+address_from_db = address_dao.read(address_id)
+print(f"Address read from DB: {address_from_db}")
+
+    # Mise à jour de l'adresse
+if address_from_db:
+        address_from_db.street = "456 Elm St"
+        success = address_dao.update(address_from_db)
+        print(f"Address updated: {success}")
+
+        # Lecture de l'adresse après mise à jour
+        address_from_db_updated = address_dao.read(address_id)
+        print(f"Address after update: {address_from_db_updated}")
+
+        # Suppression de l'adresse
+        success = address_dao.delete(address_from_db_updated)
+        print(f"Address deleted: {success}")
+
+        # Vérification si l'adresse a été supprimée
+        address_after_deletion = address_dao.read(address_id)
+        print(f"Address after deletion: {address_after_deletion}")
 
 
 if __name__ == '__main__':

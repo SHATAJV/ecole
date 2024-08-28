@@ -1,14 +1,7 @@
-# -*- coding: utf-8 -*-
-
-"""
-Classe Dao[Address]
-"""
-
 from models.adress import Address
 from daos.dao import Dao
 from dataclasses import dataclass
 from typing import Optional
-
 
 @dataclass
 class AddressDao(Dao[Address]):
@@ -28,11 +21,17 @@ class AddressDao(Dao[Address]):
         """Renvoie l'adresse correspondant à l'entité dont l'id est id_address
            (ou None si elle n'a pu être trouvée)"""
         with Dao.connection.cursor() as cursor:
-            sql = "SELECT * FROM address WHERE id_address=%s"
+            sql = "SELECT id_address, street, city, postal_code FROM address WHERE id_address=%s"
             cursor.execute(sql, (id_address,))
             result = cursor.fetchone()
             if result:
-                return Address(*result)
+                # Assurez-vous de lire les clés du dictionnaire selon les noms de colonnes
+                return Address(
+                    id=result['id_address'],
+                    street=result['street'],
+                    city=result['city'],
+                    postal_code=result['postal_code']
+                )
             return None
 
     def update(self, address: Address) -> bool:
@@ -43,7 +42,7 @@ class AddressDao(Dao[Address]):
         """
         with Dao.connection.cursor() as cursor:
             sql = "UPDATE address SET street=%s, city=%s, postal_code=%s WHERE id_address=%s"
-            cursor.execute(sql, (address.street, address.city, address.postal_code, address.id_address))
+            cursor.execute(sql, (address.street, address.city, address.postal_code, address.id))
             Dao.connection.commit()
             return cursor.rowcount > 0
 
@@ -55,6 +54,6 @@ class AddressDao(Dao[Address]):
         """
         with Dao.connection.cursor() as cursor:
             sql = "DELETE FROM address WHERE id_address=%s"
-            cursor.execute(sql, (address.id_address,))
+            cursor.execute(sql, (address.id,))
             Dao.connection.commit()
             return cursor.rowcount > 0

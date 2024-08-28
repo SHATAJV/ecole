@@ -9,7 +9,7 @@ from typing import Optional
 
 
 @dataclass
-class Adress:
+class Address:
     """Adresse d'une personne (enseignant ou élève)."""
     id: Optional[int] = field(default=None, init=False)
     street: str
