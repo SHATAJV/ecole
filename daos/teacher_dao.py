@@ -11,30 +11,38 @@ from typing import Optional
 @dataclass
 class TeacherDao(Dao[Teacher]):
     def create(self, teacher: Teacher) -> int:
-        with Dao.connection.cursor() as cursor:
-            sql = """
-                INSERT INTO teacher (first_name, last_name, age, start_date)
-                VALUES (%s, %s, %s, %s)
+        with self.connection.cursor() as cursor:
+            # Insérer la personne
+            sql_person = """
+                INSERT INTO person (first_name, last_name, age)
+                VALUES (%s, %s, %s)
             """
-            cursor.execute(sql, (teacher.first_name, teacher.last_name, teacher.age, teacher.start_date))
-            Dao.connection.commit()
-            return cursor.lastrowid
+            cursor.execute(sql_person, (teacher.first_name, teacher.last_name, teacher.age))
+            id_person = cursor.lastrowid
 
+            # Insérer l'enseignant
+            sql_teacher = """
+                INSERT INTO teacher (start_date, id_person)
+                VALUES (%s, %s)
+            """
+            cursor.execute(sql_teacher, (teacher.start_date, id_person))
+            self.connection.commit()
+            return cursor.lastrowid
     def read(self, id_teacher: int) -> Optional[Teacher]:
-        """Renvoie l'enseignant correspondant à l'entité dont l'id est id_teacher"""
-        with Dao.connection.cursor() as cursor:
-            # Correction de la requête SQL et des noms de colonnes
-            sql = "SELECT id_teacher, start_date, id_person FROM teacher WHERE id_teacher=%s"
+        with self.connection.cursor() as cursor:
+            sql = """
+                SELECT t.id_teacher, p.first_name, p.last_name, p.age, t.start_date
+                FROM teacher t
+                JOIN person p ON t.id_person = p.id_person
+                WHERE t.id_teacher = %s
+            """
             cursor.execute(sql, (id_teacher,))
             result = cursor.fetchone()
             if result:
-                id_teacher, start_date, id_person = result['id_teacher'], result['start_date'], result['id_person']
-                # Création d'un objet Teacher avec les données récupérées
-                teacher = Teacher(first_name=None, last_name=None, age=None, start_date=start_date)
-                teacher.id = id_teacher
-                # Vous pouvez définir d'autres attributs de Teacher si nécessaire
-                return teacher
+                id_teacher, first_name, last_name, age, start_date = result
+                return Teacher(first_name=first_name, last_name=last_name, age=age, start_date=start_date, id=id_teacher)
             return None
+
 
     def update(self, teacher: Teacher) -> bool:
         """Met à jour en BD l'entité Teacher correspondant à teacher"""

@@ -30,10 +30,12 @@ class CourseDao:
             if result:
                 id_course, name, start_date, end_date, id_teacher = \
                     result['id_course'], result['name'], result['start_date'], \
-                    result['end_date'], result['id_teacher']
-                teacher = TeacherDao().read(id_teacher) if id_teacher else None
-                course = Course(name=name, start_date=start_date, end_date=end_date, teacher=teacher)
+                        result['end_date'], result['id_teacher']
+                course = Course(name=name, start_date=start_date, end_date=end_date)
                 course.id = id_course
+                if id_teacher:
+                    teacher = TeacherDao().read(id_teacher)
+                    course.set_teacher(teacher)
                 return course
             return None
 
