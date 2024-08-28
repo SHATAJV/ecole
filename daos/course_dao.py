@@ -3,63 +3,54 @@
 """
 Classe Dao[Course]
 """
-
+from daos.teacher_dao import TeacherDao
 from models.course import Course
 from daos.dao import Dao
 from dataclasses import dataclass
 from typing import Optional
 
-
 @dataclass
-class CourseDao(Dao[Course]):
+class CourseDao:
     def create(self, course: Course) -> int:
-        """Crée en BD l'entité Course correspondant au cours obj
-
-        :param course: à créer sous forme d'entité Course en BD
-        :return: l'id de l'entité insérée en BD (0 si la création a échoué)
-        """
         with Dao.connection.cursor() as cursor:
-            sql = "INSERT INTO course (name, start_date, end_date, id_teacher) VALUES (%s, %s, %s, %s)"
-            cursor.execute(sql, (course.name, course.start_date, course.end_date, course.id_teacher))
+            sql = """
+                INSERT INTO course (name, start_date, end_date, id_teacher)
+                VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(sql, (course.name, course.start_date, course.end_date, course.teacher.id if course.teacher else None))
             Dao.connection.commit()
             return cursor.lastrowid
 
-
     def read(self, id_course: int) -> Optional[Course]:
-        """Renvoit le cours correspondant à l'entité dont l'id est id_course
-           (ou None s'il n'a pu être trouvé)"""
+        """Renvoie le cours correspondant à l'entité dont l'id est id_course (ou None s'il n'a pu être trouvé)"""
         with Dao.connection.cursor() as cursor:
-            sql = "SELECT * FROM course WHERE id_course=%s"
+            sql = "SELECT id_course, name, start_date, end_date, id_teacher FROM course WHERE id_course=%s"
             cursor.execute(sql, (id_course,))
             result = cursor.fetchone()
-        return result
+            if result:
+                id_course, name, start_date, end_date, id_teacher = \
+                    result['id_course'], result['name'], result['start_date'], \
+                    result['end_date'], result['id_teacher']
+                teacher = TeacherDao().read(id_teacher) if id_teacher else None
+                course = Course(name=name, start_date=start_date, end_date=end_date, teacher=teacher)
+                course.id = id_course
+                return course
+            return None
 
     def update(self, course: Course) -> bool:
-        """Met à jour en BD l'entité Course correspondant à course, pour y correspondre
-
-        :param course: cours déjà mis à jour en mémoire
-        :return: True si la mise à jour a pu être réalisée
-        """
         with Dao.connection.cursor() as cursor:
-            sql = "UPDATE course SET name=%s, start_date=%s, end_date=%s, id_teacher=%s WHERE id_course=%s"
-
-            cursor.execute(sql, (course.name, course.start_date, course.end_date, course.id_teacher, course.id_course))
+            sql = """
+                UPDATE course 
+                SET name=%s, start_date=%s, end_date=%s, id_teacher=%s 
+                WHERE id_course=%s
+            """
+            cursor.execute(sql, (course.name, course.start_date, course.end_date, course.teacher.id if course.teacher else None, course.id))
             Dao.connection.commit()
             return cursor.rowcount > 0
 
     def delete(self, course: Course) -> bool:
-        """Supprime en BD l'entité Course correspondant à course
-
-        :param course: cours dont l'entité Course correspondante est à supprimer
-        :return: True si la suppression a pu être réalisée
-        """
         with Dao.connection.cursor() as cursor:
             sql = "DELETE FROM course WHERE id_course=%s"
-            cursor.execute(sql, (course.id_course,))
+            cursor.execute(sql, (course.id,))
             Dao.connection.commit()
             return cursor.rowcount > 0
-
-
-
-
-

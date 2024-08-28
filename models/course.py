@@ -21,14 +21,6 @@ if TYPE_CHECKING:
 
 @dataclass
 class Course:
-    """Cours enseigné à l'école :
-    - id                 : clé primaire de l'entité persistante
-    - name               : nom du cours
-    - start_date         : date de début
-    - end_date           : date de fin
-    - teacher            : enseignant de ce cours
-    - students_taking_it : élèves qui suivent ce cours
-    """
     id: Optional[int] = field(default=None, init=False)
     name: str
     start_date: date
@@ -39,18 +31,13 @@ class Course:
     def set_teacher(self, teacher: Teacher) -> None:
         """Indique quel est l'enseignant de ce cours."""
         if teacher != self.teacher:
-            # il y a quelque chose à faire
             if self.teacher is not None:
-                # un autre enseignant enseignait précédemment ce cours, qui ne doit
-                # donc plus faire partie de la liste des cours qu'il enseigne
-                teacher.courses_teached.remove(self)
-            # ajout du cours à l'enseignant indiqué
+                self.teacher.courses_teached.remove(self)
+            self.teacher = teacher
             teacher.courses_teached.append(self)
 
     def add_student(self, student: Student) -> None:
-        """Ajoute :
-        - l'étudiant student à la liste des étudiants suivant ce cours
-        - ce cours à la liste des cours que suit cet étudiant"""
+        """Ajoute l'étudiant student à la liste des étudiants suivant ce cours."""
         self.students_taking_it.append(student)
         student.courses_taken.append(self)
 
