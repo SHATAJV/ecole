@@ -93,6 +93,9 @@ Bienvenue dans notre école
     # Création d'un cours avec tous les arguments nécessaires
     course = Course(name="Data Science", start_date=date(2023, 1, 1), end_date=date(2023, 6, 1))
 
+    # Associer l'enseignant au cours
+    course.set_teacher(teacher)
+
     # Utilisation du service pour ajouter le cours avec l'enseignant
     service = CourseService()
 

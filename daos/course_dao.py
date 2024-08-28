@@ -17,12 +17,12 @@ class CourseDao:
                 INSERT INTO course (name, start_date, end_date, id_teacher)
                 VALUES (%s, %s, %s, %s)
             """
-            cursor.execute(sql, (course.name, course.start_date, course.end_date, course.teacher.id if course.teacher else None))
+            teacher_id = course.teacher.id if course.teacher else None
+            cursor.execute(sql, (course.name, course.start_date, course.end_date, teacher_id))
             Dao.connection.commit()
             return cursor.lastrowid
 
     def read(self, id_course: int) -> Optional[Course]:
-        """Renvoie le cours correspondant à l'entité dont l'id est id_course (ou None s'il n'a pu être trouvé)"""
         with Dao.connection.cursor() as cursor:
             sql = "SELECT id_course, name, start_date, end_date, id_teacher FROM course WHERE id_course=%s"
             cursor.execute(sql, (id_course,))
