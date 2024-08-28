@@ -88,13 +88,10 @@ Bienvenue dans notre école
     print(school.get_course_by_id(3))
 
     # Création d'un enseignant avec tous les arguments nécessaires
-    teacher = Teacher(first_name="John", last_name="Doe", age=30, start_date=date(2022, 9, 1))
+    teacher = Teacher(first_name="Jack", last_name="Doe", age=30, start_date=date(2022, 9, 1))
 
     # Création d'un cours avec tous les arguments nécessaires
-    course = Course(name="Data Science", start_date=date(2023, 1, 1), end_date=date(2023, 6, 1))
-
-    # Associer l'enseignant au cours
-    course.set_teacher(teacher)
+    course = Course(name="Science", start_date=date(2023, 1, 1), end_date=date(2023, 6, 1))
 
     # Utilisation du service pour ajouter le cours avec l'enseignant
     service = CourseService()
@@ -104,6 +101,7 @@ Bienvenue dans notre école
         print(f"New Course ID: {course_id}")
     except Exception as e:
         print(f"An error occurred while adding the course with teacher: {e}")
+
 
 if __name__ == '__main__':
     main()
