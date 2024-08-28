@@ -13,7 +13,7 @@ class CourseService:
         teacher_id = self.teacher_dao.create(teacher)
 
         # Définir l'ID de l'enseignant dans le cours
-        course.teacher = teacher  # Assurez-vous que l'objet teacher est bien associé au cours
+        course.teacher = teacher
 
         # Création du cours avec l'enseignant
         course_id = self.course_dao.create(course)
