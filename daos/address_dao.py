@@ -25,9 +25,10 @@ class AddressDao(Dao[Address]):
             cursor.execute(sql, (id_address,))
             result = cursor.fetchone()
             if result:
-                # Assurez-vous de lire les clés du dictionnaire selon les noms de colonnes
+                # Assurez-vous d'utiliser les noms de colonnes corrects et
+                # les arguments du constructeur correspondant
                 return Address(
-                    id=result['id_address'],
+                    id=result['id_address'],  # Assurez-vous que 'id_address' correspond à l'attribut 'id'
                     street=result['street'],
                     city=result['city'],
                     postal_code=result['postal_code']
