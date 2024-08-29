@@ -21,6 +21,7 @@ class CourseDao:
             Dao.connection.commit()
             return cursor.lastrowid
 
+
     def read(self, id_course: int) -> Optional[Course]:
         """Renvoie le cours correspondant à l'entité dont l'id est id_course (ou None s'il n'a pu être trouvé)"""
         with Dao.connection.cursor() as cursor:
@@ -38,6 +39,7 @@ class CourseDao:
                     course.set_teacher(teacher)
                 return course
             return None
+
     def update(self, course: Course) -> bool:
         with Dao.connection.cursor() as cursor:
             sql = """

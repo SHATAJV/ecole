@@ -19,7 +19,7 @@ class PersonDao(Dao[Person]):
         :return: l'id de l'entité insérée en BD (0 si la création a échoué)
         """
 
-         with Dao.connection.cursor() as cursor:
+        with Dao.connection.cursor() as cursor:
                 sql = "INSERT INTO person (first_name, last_name, age) VALUES (%s, %s, %s)"
                 cursor.execute(sql, (person.first_name, person.last_name, person.age))
                 Dao.connection.commit()
