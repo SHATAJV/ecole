@@ -103,7 +103,7 @@ Bienvenue dans notre école
     except Exception as e:
         print(f"An error occurred while adding the course with teacher: {e}")
 
-print("Testing Address DAO Operations")
+"""print("Testing Address DAO Operations")
 
     # Création d'une instance d'AddressDao
 address_dao = AddressDao()
@@ -133,7 +133,7 @@ if address_from_db:
 
         # Vérification si l'adresse a été supprimée
         address_after_deletion = address_dao.read(address_id)
-        print(f"Address after deletion: {address_after_deletion}")
+        print(f"Address after deletion: {address_after_deletion}")"""""
 
 
 if __name__ == '__main__':
