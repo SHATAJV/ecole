@@ -1,4 +1,7 @@
 from datetime import date
+
+from daos.course_dao import CourseDao
+from models import course
 from models.adress import Address
 from models.course import Course
 from models.teacher import Teacher
@@ -88,27 +91,8 @@ Bienvenue dans notre école
     print(school.get_course_by_id(2))
     print(school.get_course_by_id(3))
 
-    # Création d'un enseignant avec tous les arguments nécessaires
-    teacher = Teacher(first_name="Jack", last_name="Doe", age=30, start_date=date(2022, 9, 1))
 
-    # Création d'un cours avec tous les arguments nécessaires
-    course = Course(name="Science", start_date=date(2023, 1, 1), end_date=date(2023, 6, 1))
-
-    # Utilisation du service pour ajouter le cours avec l'enseignant
-    service = CourseService()
-
-    try:
-        course_id = service.add_course_with_teacher(course, teacher)
-        print(f"New Course ID: {course_id}")
-    except Exception as e:
-        print(f"An error occurred while adding the course with teacher: {e}")
-
-"""print("Testing Address DAO Operations")
-
-    # Création d'une instance d'AddressDao
-address_dao = AddressDao()
-
-# Création d'une nouvelle adresse
+"""# Création d'une nouvelle adresse
 address = Address(street="123 Main St", city="Springfield", postal_code=12345)
 address_id = address_dao.create(address)
 print(f"Address created with ID: {address_id}")
@@ -133,7 +117,7 @@ if address_from_db:
 
         # Vérification si l'adresse a été supprimée
         address_after_deletion = address_dao.read(address_id)
-        print(f"Address after deletion: {address_after_deletion}")"""""
+        print(f"Address after deletion: {address_after_deletion}")"""
 
 
 if __name__ == '__main__':
